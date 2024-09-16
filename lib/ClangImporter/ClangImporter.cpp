@@ -42,6 +42,7 @@
 #include "swift/Basic/Defer.h"
 #include "swift/Basic/Platform.h"
 #include "swift/Basic/Range.h"
+#include "swift/Basic/SourceLoc.h"
 #include "swift/Basic/StringExtras.h"
 #include "swift/Basic/Version.h"
 #include "swift/ClangImporter/ClangImporterRequests.h"
@@ -64,6 +65,7 @@
 #include "clang/CAS/CASOptions.h"
 #include "clang/CAS/IncludeTree.h"
 #include "clang/CodeGen/ObjectFilePCHContainerOperations.h"
+#include "clang/Frontend/CompilerInstance.h"
 #include "clang/Frontend/CompilerInvocation.h"
 #include "clang/Frontend/FrontendActions.h"
 #include "clang/Frontend/FrontendOptions.h"
@@ -2854,14 +2856,12 @@ ClangImporter::Implementation::exportSourceLoc(SourceLoc loc) {
 
 SourceLoc
 ClangImporter::Implementation::importSourceLoc(clang::SourceLocation loc) {
-  // FIXME: Implement!
-  return SourceLoc();
+  return BuffersForDiagnostics.resolveSourceLocation(Instance->getSourceManager(), loc);
 }
 
 SourceRange
-ClangImporter::Implementation::importSourceRange(clang::SourceRange loc) {
-  // FIXME: Implement!
-  return SourceRange();
+ClangImporter::Implementation::importSourceRange(clang::SourceRange range) {
+  return SourceRange(importSourceLoc(range.getBegin()), importSourceLoc(range.getEnd()));
 }
 
 #pragma mark Importing names
