@@ -3608,8 +3608,6 @@ public:
 };
 } // unnamed namespace
 
-bool ClangModuleUnit::shouldCollectDisplayDecls() const { return true; }
-
 void ClangModuleUnit::getTopLevelDecls(SmallVectorImpl<Decl*> &results) const {
   VectorDeclPtrConsumer consumer(results);
   FilteringDeclaredDeclConsumer filterConsumer(consumer, this);

@@ -1198,14 +1198,6 @@ void SourceFile::lookupObjCMethods(
   results.append(known->second.begin(), known->second.end());
 }
 
-bool ModuleDecl::shouldCollectDisplayDecls() const {
-  for (const FileUnit *file : Files) {
-    if (!file->shouldCollectDisplayDecls())
-      return false;
-  }
-  return true;
-}
-
 void ModuleDecl::getLocalTypeDecls(SmallVectorImpl<TypeDecl*> &Results) const {
   FORWARD(getLocalTypeDecls, (Results));
 }
@@ -1429,9 +1421,6 @@ SourceFile::getExternalRawLocsForDecl(const Decl *D) const {
 void ModuleDecl::ImportCollector::collect(
     const ImportedModule &importedModule) {
   auto *module = importedModule.importedModule;
-
-  if (!module->shouldCollectDisplayDecls())
-    return;
 
   if (importFilter && !importFilter(module))
     return;
