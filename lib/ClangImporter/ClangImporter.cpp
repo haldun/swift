@@ -3608,8 +3608,7 @@ public:
 };
 } // unnamed namespace
 
-// FIXME(https://github.com/apple/swift-docc/issues/190): Should submodules still be crawled for the symbol graph?
-bool ClangModuleUnit::shouldCollectDisplayDecls() const { return isTopLevel(); }
+bool ClangModuleUnit::shouldCollectDisplayDecls() const { return true; }
 
 void ClangModuleUnit::getTopLevelDecls(SmallVectorImpl<Decl*> &results) const {
   VectorDeclPtrConsumer consumer(results);
