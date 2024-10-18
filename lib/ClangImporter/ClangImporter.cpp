@@ -7620,6 +7620,20 @@ static bool hasCopyTypeOperations(const clang::CXXRecordDecl *decl) {
       decl->getName() == "_Optional_construct_base")
     return true;
 
+  if (decl->isInStdNamespace() && decl->getIdentifier() &&
+      decl->getName() == "vector") {
+    llvm::errs() << "!!! === vector ctors: ===\n\n";
+    for (auto c : decl->ctors()) {
+      c->dump(llvm::errs());
+      llvm::errs() << "\n";
+      llvm::errs() << "isCopyCtor = " << c->isCopyConstructor() << "\n";
+      llvm::errs() << "isDeleted = " << c->isDeleted() << "\n";
+      llvm::errs() << "access = " << c->getAccess() << "\n";
+      llvm::errs() << "\n\n";
+    }
+    llvm::errs() << "!!! =====================\n\n";
+  }
+
   // If we have no way of copying the type we can't import the class
   // at all because we cannot express the correct semantics as a swift
   // struct.
