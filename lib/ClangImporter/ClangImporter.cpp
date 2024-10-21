@@ -7620,9 +7620,9 @@ static bool hasCopyTypeOperations(const clang::CXXRecordDecl *decl) {
       decl->getName() == "_Optional_construct_base")
     return true;
 
-  if (decl->isInStdNamespace() && decl->getIdentifier() &&
-      decl->getName() == "vector") {
-    llvm::errs() << "!!! === vector ctors: ===\n\n";
+  if (decl->getIdentifier() &&
+      decl->getName() == "__normal_iterator") {
+    llvm::errs() << "!!! === __normal_iterator ctors: ===\n\n";
     for (auto c : decl->ctors()) {
       c->dump(llvm::errs());
       llvm::errs() << "\n";
