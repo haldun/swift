@@ -7623,6 +7623,7 @@ static bool hasCopyTypeOperations(const clang::CXXRecordDecl *decl) {
   if (decl->getIdentifier() &&
       decl->getName() == "__normal_iterator") {
     llvm::errs() << "!!! === __normal_iterator ctors: ===\n\n";
+    bool sawCopyCtor = false;
     for (auto c : decl->ctors()) {
       c->dump(llvm::errs());
       llvm::errs() << "\n";
@@ -7630,6 +7631,8 @@ static bool hasCopyTypeOperations(const clang::CXXRecordDecl *decl) {
       llvm::errs() << "isDeleted = " << c->isDeleted() << "\n";
       llvm::errs() << "access = " << c->getAccess() << "\n";
       llvm::errs() << "\n\n";
+      if (c->isCopyConstructor())
+        sawCopyCtor = true;
     }
     
     if (llvm::any_of(decl->ctors(), [](clang::CXXConstructorDecl *ctor) {
@@ -7637,6 +7640,12 @@ static bool hasCopyTypeOperations(const clang::CXXRecordDecl *decl) {
                  (ctor->isDeleted() || ctor->getAccess() != clang::AS_public);
         })) {
       llvm::errs() << "!!! ===================== FALSE!!! \n\n";
+      return false;
+    }
+    if (!sawCopyCtor) {
+      decl->dump();
+      llvm::errs() << "decl->needsImplicitCopyConstructor() =" << decl->needsImplicitCopyConstructor() << "\n";
+      llvm::errs() << "decl->isTriviallyCopyable() =" << decl->isTriviallyCopyable() << "\n";
       return false;
     }
     llvm::errs() << "!!! =====================\n\n";
