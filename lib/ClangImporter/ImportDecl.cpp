@@ -2725,6 +2725,8 @@ namespace {
     }
 
     Decl *VisitCXXRecordDecl(const clang::CXXRecordDecl *decl) {
+      if (decl->isDependentContext())
+        return nullptr;
       // This can be called from lldb without C++ interop being enabled: There
       // may be C++ declarations in imported modules, but the interface for
       // those modules may be a pure C or Objective-C interface.
@@ -3947,6 +3949,7 @@ namespace {
     }
 
     Decl *VisitCXXMethodDecl(const clang::CXXMethodDecl *decl) {
+      if (decl->isDependentContext()) return nullptr;
       // The static `operator ()` introduced in C++ 23 is still callable as an
       // instance operator in C++, and we want to preserve the ability to call
       // it as an instance method in Swift as well for source compatibility.
